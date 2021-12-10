@@ -1,0 +1,14 @@
+{
+    "name": "webscientist/postman-laravel",
+    "type": "library",
+    "require": {
+        "webscientist/postman": "dev-main"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Webscientist\\PostmanLaravel\\": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
