@@ -1,7 +1,6 @@
 <?php
 
-namespace WebScientist\LaravelPostman\Services;
-
+namespace Webscientist\PostmanLaravel\Services;
 
 class CollectionService
 {
