@@ -1,6 +1,6 @@
 <?php
 
-namespace WebScientist\PostmanLaravel;
+namespace Webscientist\PostmanLaravel;
 
 use Illuminate\Support\ServiceProvider;
 
