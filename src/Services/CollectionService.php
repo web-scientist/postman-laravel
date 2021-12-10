@@ -20,9 +20,10 @@ class CollectionService
         $this->postman = new Postman();
     }
 
-    public function name(string $name)
+    public function name(string $name): self
     {
         $this->collection = $this->postman->collection($name);
+        return $this;
     }
 
     public function export(string $name): string
@@ -87,7 +88,6 @@ class CollectionService
         }
 
         $object = $object->request($name, $method)->url($url)->description($description);
-
 
         $body = [];
         if (in_array($route->methods[0], $formSubmitMethods)) {
