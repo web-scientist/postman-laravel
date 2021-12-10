@@ -3,7 +3,8 @@
     "type": "library",
     "require": {
         "webscientist/postman": "dev-main",
-        "illuminate/routing": "8.x-dev"
+        "illuminate/routing": "8.x-dev",
+        "illuminate/http": "8.x-dev"
     },
     "license": "MIT",
     "autoload": {

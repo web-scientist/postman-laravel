@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "546e88ae9b63b78b57e1ea6ddf59827c",
+    "content-hash": "a5eff59bcab64295af7c3bae8dc842a5",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -2647,7 +2647,8 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "webscientist/postman": 20,
-        "illuminate/routing": 20
+        "illuminate/routing": 20,
+        "illuminate/http": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
