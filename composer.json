@@ -2,7 +2,8 @@
     "name": "webscientist/postman-laravel",
     "type": "library",
     "require": {
-        "webscientist/postman": "dev-main"
+        "webscientist/postman": "dev-main",
+        "illuminate/routing": "8.x-dev"
     },
     "license": "MIT",
     "autoload": {
