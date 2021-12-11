@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Storage;
 use ReflectionMethod;
 use Illuminate\Support\Str;
 use WebScientist\Postman\Collection\Collection;
@@ -32,20 +33,32 @@ class CollectionService
         return $this;
     }
 
-    public function export(string $name): string
+    public function json(): string
     {
         $this->getRoutes();
-        return json_encode($this->collection, JSON_UNESCAPED_SLASHES);
+        return json_encode($this->collection, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+    }
+
+    public function export(string $name = null, bool $suffixDateTime = false): bool
+    {
+        $json = $this->json();
+        $name = $name ?? $this->collection->info['name'];
+
+        $suffix = $suffixDateTime ? date_format(date_create(), '_YmdHis') : '';
+
+        $filename = Str::snake($name) . $suffix . '.postman_collection.json';
+        $path = "/postman/{$filename}";
+
+        return Storage::disk('local')->put($path, $json);
     }
 
     public function getRoutes()
     {
         $routes = $this->router->getRoutes()->get();
 
-        // dd($routes->get());
         $filtered = $this->filter($routes);
 
-        foreach ($filtered as $key => $route) {
+        foreach ($filtered as $route) {
             $this->createRequests($route);
         }
     }
@@ -100,11 +113,7 @@ class CollectionService
         if ($prefix != '') {
             $levels = explode('/', $prefix);
 
-            $nested = '';
-            foreach ($levels as $key => $level) {
-                if ($level == 'api') {
-                    continue;
-                }
+            foreach ($levels as $level) {
                 $level = $this->transformName($level);
                 if ($object->{$level} === null) {
                     $object = $object->item($level);
