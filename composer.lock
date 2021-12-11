@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a5eff59bcab64295af7c3bae8dc842a5",
+    "content-hash": "cd011989bcade02895d9493a0391b052",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -2607,16 +2607,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-scientist/postman.git",
-                "reference": "837d0bfabd606a57a846f2fcfe043670698ad3ca"
+                "reference": "37c184b077196aeb8ee6438c666ba498e0044d5b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/web-scientist/postman/zipball/837d0bfabd606a57a846f2fcfe043670698ad3ca",
-                "reference": "837d0bfabd606a57a846f2fcfe043670698ad3ca",
+                "url": "https://api.github.com/repos/web-scientist/postman/zipball/37c184b077196aeb8ee6438c666ba498e0044d5b",
+                "reference": "37c184b077196aeb8ee6438c666ba498e0044d5b",
                 "shasum": ""
             },
             "require": {
-                "illuminate/support": "8.x-dev"
+                "illuminate/support": "^8.0"
             },
             "default-branch": true,
             "type": "library",
@@ -2639,16 +2639,14 @@
                 "issues": "https://github.com/web-scientist/postman/issues",
                 "source": "https://github.com/web-scientist/postman/tree/main"
             },
-            "time": "2021-12-10T16:53:13+00:00"
+            "time": "2021-12-10T17:49:40+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "webscientist/postman": 20,
-        "illuminate/routing": 20,
-        "illuminate/http": 20
+        "webscientist/postman": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

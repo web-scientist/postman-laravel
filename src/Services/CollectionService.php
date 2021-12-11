@@ -2,7 +2,10 @@
 
 namespace Webscientist\PostmanLaravel\Services;
 
+use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use ReflectionMethod;
 use Illuminate\Support\Str;
@@ -15,9 +18,12 @@ class CollectionService
 
     protected Collection $collection;
 
+    protected Router $router;
+
     public function __construct()
     {
         $this->postman = new Postman();
+        $this->router = App::make(Router::class);
     }
 
     public function name(string $name): self
@@ -28,13 +34,15 @@ class CollectionService
 
     public function export(string $name): string
     {
+        $this->getRoutes();
         return json_encode($this->collection, JSON_UNESCAPED_SLASHES);
     }
 
     public function getRoutes()
     {
-        $routes = $this->router->getRoutes()->getRoutes();
+        $routes = $this->router->getRoutes()->get();
 
+        // dd($routes->get());
         $filtered = $this->filter($routes);
 
         foreach ($filtered as $key => $route) {
@@ -47,7 +55,25 @@ class CollectionService
         $filtered = [];
 
         foreach ($routes as $route) {
-            // filter criteria wip
+            $uris = explode('/', $route->uri);
+
+            if (count($uris) === 1) {
+                continue;
+            }
+
+            $excludedUriPrefixes = [
+                '_ignition',
+                'sanctum',
+            ];
+
+            if (in_array($uris[0], $excludedUriPrefixes)) {
+                continue;
+            }
+
+            if ($route->action['uses'] instanceof Closure) {
+                continue;
+            }
+            $filtered[] = $route;
         }
 
         return $filtered;
@@ -57,6 +83,7 @@ class CollectionService
     {
         $prefix = $route->action['prefix'];
         $uses = $route->action['uses'];
+
         $controllerAction = explode('@', $uses);
 
         $formSubmitMethods = ['POST', 'PUT', 'PATCH'];
