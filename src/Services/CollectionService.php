@@ -23,7 +23,7 @@ class CollectionService
 
     public function __construct()
     {
-        $this->postman = new Postman();
+        $this->postman = App::make(Postman::class);
         $this->router = App::make(Router::class);
     }
 
@@ -52,7 +52,7 @@ class CollectionService
         return Storage::disk('local')->put($path, $json);
     }
 
-    public function getRoutes()
+    protected function getRoutes()
     {
         $routes = $this->router->getRoutes()->get();
 
@@ -133,7 +133,7 @@ class CollectionService
         }
     }
 
-    public function getBody(string $class, string $method)
+    protected function getBody(string $class, string $method)
     {
         $reflectionMethod = new ReflectionMethod($class, $method);
 
@@ -151,7 +151,7 @@ class CollectionService
         return $this->getRules($rules);
     }
 
-    private function getRules(array $rules)
+    protected function getRules(array $rules)
     {
         $fields = [];
 
@@ -173,13 +173,13 @@ class CollectionService
     }
 
 
-    private function transformName(string $name): string
+    protected function transformName(string $name): string
     {
         $name = Str::replace('.', ' ', $name);
         return Str::title($name);
     }
 
-    private function getDescription(string $class, string $method)
+    protected function getDescription(string $class, string $method)
     {
         $reflectionMethod = new ReflectionMethod($class, $method);
         $docComment = $reflectionMethod->getDocComment();
