@@ -74,10 +74,7 @@ class CollectionService
                 continue;
             }
 
-            $excludedUriPrefixes = [
-                '_ignition',
-                'sanctum',
-            ];
+            $excludedUriPrefixes = Config::get('postman.request.excluded_prefixes');
 
             if (in_array($uris[0], $excludedUriPrefixes)) {
                 continue;

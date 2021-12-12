@@ -4,7 +4,8 @@
     "require": {
         "webscientist/postman": "dev-main",
         "illuminate/routing": "^8.0",
-        "illuminate/http": "^8.0"
+        "illuminate/http": "^8.0",
+        "illuminate/support": "^8.0"
     },
     "license": "MIT",
     "autoload": {

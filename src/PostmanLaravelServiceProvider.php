@@ -1,6 +1,6 @@
 <?php
 
-namespace Webscientist\PostmanLaravel;
+namespace WebScientist\PostmanLaravel;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -23,6 +23,8 @@ class PostmanLaravelServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        $this->publishes([
+            __DIR__ . '/../config/postman.php' => config_path('postman.php'),
+        ], 'postman-laravel');
     }
 }
