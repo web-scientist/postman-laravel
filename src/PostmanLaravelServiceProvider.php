@@ -13,7 +13,10 @@ class PostmanLaravelServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->mergeConfigFrom(
+            __DIR__ . '/../config/postman.php',
+            'postman'
+        );
     }
 
     /**
@@ -25,6 +28,6 @@ class PostmanLaravelServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__ . '/../config/postman.php' => config_path('postman.php'),
-        ], 'postman-laravel');
+        ], 'postman');
     }
 }
