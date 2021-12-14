@@ -1,6 +1,6 @@
 <?php
 
-namespace Webscientist\PostmanLaravel\Services;
+namespace WebScientist\PostmanLaravel\Services;
 
 use Closure;
 use Illuminate\Http\Request;
@@ -39,10 +39,10 @@ class CollectionService
         return json_encode($this->collection, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
     }
 
-    public function export(string $name = null, bool $suffixDateTime = false): bool
+    public function export(bool $suffixDateTime = false): bool
     {
         $json = $this->json();
-        $name = $name ?? $this->collection->info['name'];
+        $name = $this->collection->info['name'];
 
         $suffix = $suffixDateTime ? date_format(date_create(), '_YmdHis') : '';
 
