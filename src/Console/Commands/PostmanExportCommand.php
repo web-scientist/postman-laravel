@@ -15,7 +15,7 @@ class PostmanExportCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'postman:export {--name=} {--t|timestamp}';
+    protected $signature = 'postman:export {--name=}';
 
     /**
      * The console command description.
@@ -36,7 +36,7 @@ class PostmanExportCommand extends Command
 
     public function handle(): int
     {
-        $name = $this->option('name') ?? Config::get('app.name');
+        $name = ($this->option('name') ?? Config::get('app.name')) . '_' . time();
         App::make(Collection::class)
             ->name($name)
             ->export();
