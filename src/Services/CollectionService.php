@@ -111,14 +111,14 @@ class CollectionService
         $description = $this->getDescription(...$controllerAction);
 
         $method = $route->methods[0];
-
+        $as = $route->action['as'] ?? '';
         $name = $this->nameOrPath($route);
         $baseUrl = Config::get('app.url', '{{base_url}}');
         $url = rtrim($baseUrl) . '/' . $route->uri;
         $object = $this->collection;
 
-        if ($name != '') {
-            $levels = explode('.', $name);
+        if ($as != '') {
+            $levels = explode('.', $as);
             array_pop($levels);
 
             foreach ($levels as $level) {
