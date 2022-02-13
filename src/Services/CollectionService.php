@@ -141,7 +141,11 @@ class CollectionService
             $dependencyClass = (string) $parameter->getType();
             $dependency = new $dependencyClass();
 
-            if ($dependency instanceof Request) {
+            if (!($dependency instanceof Request)) {
+                continue;
+            }
+
+            if (method_exists($dependency, 'rules')) {
                 $rules = $dependency->rules();
             }
         }
