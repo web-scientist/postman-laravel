@@ -111,14 +111,14 @@ class CollectionService
         $description = $this->getDescription(...$controllerAction);
 
         $method = $route->methods[0];
-        $as = $route->action['as'];
-        $name = $this->transformName($as);
+
+        $name = $this->nameOrPath($route);
         $baseUrl = Config::get('app.url', '{{base_url}}');
         $url = rtrim($baseUrl) . '/' . $route->uri;
         $object = $this->collection;
 
-        if ($as != '') {
-            $levels = explode('.', $as);
+        if ($name != '') {
+            $levels = explode('.', $name);
             array_pop($levels);
 
             foreach ($levels as $level) {
@@ -207,8 +207,14 @@ class CollectionService
         return $docComment;
     }
 
-    protected function getOrSetDepth()
+    protected function nameOrPath($route)
     {
-        # code...
+        $action = $route->action;
+        if (array_key_exists('as', $action)) {
+            return $this->transformName($action['as']);
+        }
+
+        $string = Str::replace('/', ' ', $route->uri);
+        return Str::ucfirst($string);
     }
 }
