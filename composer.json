@@ -2,6 +2,7 @@
     "name": "webscientist/postman-laravel",
     "type": "library",
     "require": {
+        "php": "^8.0",
         "webscientist/postman": "dev-main",
         "illuminate/routing": "^9.0",
         "illuminate/http": "^9.0",
