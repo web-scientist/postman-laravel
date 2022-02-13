@@ -139,6 +139,11 @@ class CollectionService
         $rules = [];
         foreach ($parameters as $parameter) {
             $dependencyClass = (string) $parameter->getType();
+
+            if (empty($dependencyClass)) {
+                continue;
+            }
+
             $dependency = new $dependencyClass();
 
             if (!($dependency instanceof Request)) {
@@ -169,7 +174,7 @@ class CollectionService
                 'value' => $value,
                 'description' => $rule,
             ];
-        }
+        };
         return $fields;
     }
 
