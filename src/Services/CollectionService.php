@@ -21,6 +21,8 @@ class CollectionService
 
     protected Router $router;
 
+    protected array $depth = [];
+
     public function __construct()
     {
         $this->postman = App::make(Postman::class);
@@ -99,7 +101,6 @@ class CollectionService
 
     protected function createRequests($route)
     {
-        $prefix = $route->action['prefix'];
         $uses = $route->action['uses'];
 
         $controllerAction = explode('@', $uses);
@@ -110,13 +111,15 @@ class CollectionService
         $description = $this->getDescription(...$controllerAction);
 
         $method = $route->methods[0];
-        $name = $this->transformName($route->action['as']);
+        $as = $route->action['as'];
+        $name = $this->transformName($as);
         $baseUrl = Config::get('app.url', '{{base_url}}');
         $url = rtrim($baseUrl) . '/' . $route->uri;
         $object = $this->collection;
 
-        if ($prefix != '') {
-            $levels = explode('/', $prefix);
+        if ($as != '') {
+            $levels = explode('.', $as);
+            array_pop($levels);
 
             foreach ($levels as $level) {
                 $level = $this->transformName($level);
@@ -202,5 +205,10 @@ class CollectionService
         $docComment = str_replace('/', '', $docComment);
         $docComment = trim($docComment);
         return $docComment;
+    }
+
+    protected function getOrSetDepth()
+    {
+        # code...
     }
 }
