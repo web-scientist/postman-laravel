@@ -5,24 +5,27 @@ namespace WebScientist\PostmanLaravel\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Http;
+use WebScientist\PostmanLaravel\Concerns\Api;
 use WebScientist\PostmanLaravel\Services\CollectionService as Collection;
 
-class PostmanExportCommand extends Command
+class PostmanCreateCommand extends Command
 
 {
+    use Api;
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'postman:export {--name=} {--t|timestamp}';
+    protected $signature = 'postman:create {--name=}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Creates a Postman collection and exports it to the file system';
+    protected $description = 'Creates a Postman collection on your Postman workspace.';
 
     /**
      * Create a new command instance.
@@ -37,11 +40,21 @@ class PostmanExportCommand extends Command
     public function handle(): int
     {
         $name = $this->option('name') ?? Config::get('app.name');
-        App::make(Collection::class)
+        $json = App::make(Collection::class)
             ->name($name)
-            ->export();
+            ->toJson(true);
 
-        $this->info('File exported successfully');
+        $response = $this->http()
+            ->withBody($json, 'application/json')
+            ->post('collections');
+
+        if ($response->failed()) {
+            $this->warn($response->json('error.message'));
+            $this->warn('Check you POSTMAN_API_KEY in .env file');
+            return 0;
+        }
+
+        $this->info('Collection created on Postman.');
 
         return 0;
     }

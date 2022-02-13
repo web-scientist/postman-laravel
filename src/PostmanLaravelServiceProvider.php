@@ -3,7 +3,7 @@
 namespace WebScientist\PostmanLaravel;
 
 use Illuminate\Support\ServiceProvider;
-use WebScientist\PostmanLaravel\Console\Commands\PostmanExportCommand;
+use WebScientist\PostmanLaravel\Console\Commands;
 
 class PostmanLaravelServiceProvider extends ServiceProvider
 {
@@ -29,7 +29,8 @@ class PostmanLaravelServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->commands([
-                PostmanExportCommand::class,
+                Commands\PostmanExportCommand::class,
+                Commands\PostmanCreateCommand::class
             ]);
         }
 

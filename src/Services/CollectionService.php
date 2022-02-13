@@ -39,6 +39,14 @@ class CollectionService
         return json_encode($this->collection, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
     }
 
+    public function toJson(bool $keyWrapper = false, int $flags = JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT): string
+    {
+        $this->getRoutes();
+        return $keyWrapper
+            ? json_encode(['collection' => $this->collection], $flags)
+            : json_encode($this->collection, $flags);
+    }
+
     public function export(bool $suffixDateTime = false): bool
     {
         $json = $this->json();
