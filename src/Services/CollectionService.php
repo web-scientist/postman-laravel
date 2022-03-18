@@ -84,6 +84,9 @@ class CollectionService
         $filtered = [];
 
         foreach ($routes as $route) {
+            if (!in_array('api', $route->action['middleware'])) {
+                continue;
+            }
             $uris = explode('/', $route->uri);
 
             if (count($uris) === 1) {
@@ -101,7 +104,6 @@ class CollectionService
             }
             $filtered[] = $route;
         }
-
         return $filtered;
     }
 
@@ -206,11 +208,16 @@ class CollectionService
     {
         $reflectionMethod = new ReflectionMethod($class, $method);
         $docComment = $reflectionMethod->getDocComment();
+        $lines = explode("\n", $docComment);
+        array_pop($lines);
+        array_shift($lines);
+        foreach ($lines as &$line) {
+            $line = ltrim($line);
+            $line = ltrim($line, "*");
+            $line = ltrim($line);
+        }
 
-        $docComment = str_replace('*', '', $docComment);
-        $docComment = str_replace('/', '', $docComment);
-        $docComment = trim($docComment);
-        return $docComment;
+        return $lines[0];
     }
 
     protected function nameOrPath($route)
