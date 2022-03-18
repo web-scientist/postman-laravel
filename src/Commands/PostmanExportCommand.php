@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use WebScientist\PostmanLaravel\Services\CollectionService as Collection;
+use WebScientist\PostmanLaravel\Services\EnvironmentService as Environment;
 
 class PostmanExportCommand extends Command
 
@@ -41,7 +42,11 @@ class PostmanExportCommand extends Command
             ->name($name)
             ->export();
 
-        $this->info('File exported successfully');
+        App::make(Environment::class)
+            ->name($name)
+            ->export();
+
+        $this->info('Files exported successfully');
 
         return 0;
     }

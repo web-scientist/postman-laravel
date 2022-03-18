@@ -4,6 +4,7 @@ namespace WebScientist\PostmanLaravel\Services;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use WebScientist\Postman\Environment\Environment;
 use WebScientist\Postman\Services\PostmanService as Postman;
@@ -26,15 +27,23 @@ class EnvironmentService
         return $this;
     }
 
+    public function toRaw(): Environment
+    {
+        $this->values();
+        return $this->environment;
+    }
+
     public function json(): string
     {
-        $this->setValues('BASE_URL', '');
+        $this->values();
         return json_encode($this->environment, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
     }
 
-    public function setValues(string $key, string $value)
+    public function values(): self
     {
-        $this->environment->values($key, $value);
+        $values = Config::get('postman.environment.variables', []);
+        $this->environment->values($values);
+        return $this;
     }
 
     public function export(bool $suffixDateTime = false): bool

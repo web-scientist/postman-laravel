@@ -35,6 +35,12 @@ class CollectionService
         return $this;
     }
 
+    public function toRaw(): Collection
+    {
+        $this->getRoutes();
+        return $this->collection;
+    }
+
     public function json(): string
     {
         $this->getRoutes();
@@ -113,7 +119,7 @@ class CollectionService
         $method = $route->methods[0];
         $as = $route->action['as'] ?? '';
         $name = $this->nameOrPath($route);
-        $baseUrl = '{{BASE_URL}}';
+        $baseUrl = Config::get('app.url', '{{base_url}}');
         $url = rtrim($baseUrl) . '/' . $route->uri;
         $object = $this->collection;
 

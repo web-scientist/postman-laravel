@@ -13,4 +13,16 @@ return [
             'sanctum',
         ],
     ],
+
+    'environment' => [
+        'variables' => [
+            [
+                'key' => 'BASE_URL',
+                'value' => env('APP_URL', ''),
+                'type' => 'default',
+                'enabled' => true,
+            ],
+            // Other Variables
+        ]
+    ]
 ];
