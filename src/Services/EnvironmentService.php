@@ -39,6 +39,14 @@ class EnvironmentService
         return json_encode($this->environment, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
     }
 
+    public function toJson(bool $keyWrapper = false, int $flags = JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT): string
+    {
+        $this->values();
+        return $keyWrapper
+            ? json_encode(['environment' => $this->environment], $flags)
+            : json_encode($this->environment, $flags);
+    }
+
     public function values(): self
     {
         $values = Config::get('postman.environment.variables', []);

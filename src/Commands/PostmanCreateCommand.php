@@ -2,11 +2,13 @@
 
 namespace WebScientist\PostmanLaravel\Commands;
 
+use Illuminate\Support\Str;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use WebScientist\PostmanLaravel\Concerns\Api;
 use WebScientist\PostmanLaravel\Services\CollectionService as Collection;
+use WebScientist\PostmanLaravel\Services\EnvironmentService as Environment;
 
 class PostmanCreateCommand extends Command
 
@@ -27,6 +29,8 @@ class PostmanCreateCommand extends Command
      */
     protected $description = 'Creates a Postman collection on your Postman workspace.';
 
+    protected $name = '';
+
     /**
      * Create a new command instance.
      *
@@ -39,14 +43,34 @@ class PostmanCreateCommand extends Command
 
     public function handle(): int
     {
-        $name = $this->option('name') ?? Config::get('app.name');
-        $json = App::make(Collection::class)
-            ->name($name)
+        $this->name = $this->option('name') ?? Config::get('app.name');
+
+        $collection = App::make(Collection::class)
+            ->name($this->name)
             ->toJson(true);
 
+        $proceed = $this->callPostman('collections', $collection);
+
+        if (!$proceed) {
+            return 0;
+        }
+
+        $environment = App::make(Environment::class)
+            ->name($this->name)
+            ->toJson(true);
+        $this->callPostman('environments', $environment);
+
+
+        $this->info("Collection and Environment created on Postman.");
+
+        return 0;
+    }
+
+    public function callPostman(string $url, string $json)
+    {
         $response = $this->http()
             ->withBody($json, 'application/json')
-            ->post('collections');
+            ->post($url);
 
         if ($response->failed()) {
             $this->warn($response->json('error.message'));
@@ -54,8 +78,6 @@ class PostmanCreateCommand extends Command
             return 0;
         }
 
-        $this->info('Collection created on Postman.');
-
-        return 0;
+        return 1;
     }
 }
