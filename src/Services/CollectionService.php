@@ -121,12 +121,12 @@ class CollectionService
         $method = $route->methods[0];
         $as = $route->action['as'] ?? '';
         $name = $this->nameOrPath($route);
-        $baseUrl = Config::get('app.url', '{{base_url}}');
-        $url = rtrim($baseUrl) . '/' . $route->uri;
+        $url = $route->uri;
         $object = $this->collection;
 
         if ($as != '') {
             $levels = explode('.', $as);
+            // dd($levels);
             array_pop($levels);
 
             foreach ($levels as $level) {
