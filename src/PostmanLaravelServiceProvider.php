@@ -4,7 +4,7 @@ namespace WebScientist\PostmanLaravel;
 
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
-use WebScientist\PostmanLaravel\Console\Commands;
+use WebScientist\PostmanLaravel\Commands;
 
 class PostmanLaravelServiceProvider extends ServiceProvider
 {

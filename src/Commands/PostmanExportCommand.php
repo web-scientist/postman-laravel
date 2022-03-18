@@ -1,6 +1,6 @@
 <?php
 
-namespace WebScientist\PostmanLaravel\Console\Commands;
+namespace WebScientist\PostmanLaravel\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;

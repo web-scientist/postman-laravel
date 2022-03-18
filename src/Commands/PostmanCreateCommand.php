@@ -1,11 +1,10 @@
 <?php
 
-namespace WebScientist\PostmanLaravel\Console\Commands;
+namespace WebScientist\PostmanLaravel\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Http;
 use WebScientist\PostmanLaravel\Concerns\Api;
 use WebScientist\PostmanLaravel\Services\CollectionService as Collection;
 
@@ -13,6 +12,7 @@ class PostmanCreateCommand extends Command
 
 {
     use Api;
+
     /**
      * The name and signature of the console command.
      *
