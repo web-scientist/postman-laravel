@@ -3,13 +3,13 @@
 namespace WebScientist\PostmanLaravel\Services;
 
 use Closure;
+use ReflectionMethod;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
-use ReflectionMethod;
-use Illuminate\Support\Str;
 use WebScientist\Postman\Collection\Collection;
 use WebScientist\Postman\Services\PostmanService as Postman;
 
@@ -113,7 +113,7 @@ class CollectionService
         $method = $route->methods[0];
         $as = $route->action['as'] ?? '';
         $name = $this->nameOrPath($route);
-        $baseUrl = Config::get('app.url', '{{base_url}}');
+        $baseUrl = '{{BASE_URL}}';
         $url = rtrim($baseUrl) . '/' . $route->uri;
         $object = $this->collection;
 
