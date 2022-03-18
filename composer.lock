@@ -3414,12 +3414,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-scientist/postman.git",
-                "reference": "ea328a6148450271e286930702e150b811379723"
+                "reference": "d7d4e8bb274d49b61fcd0a17285f23a55c5c8fed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/web-scientist/postman/zipball/ea328a6148450271e286930702e150b811379723",
-                "reference": "ea328a6148450271e286930702e150b811379723",
+                "url": "https://api.github.com/repos/web-scientist/postman/zipball/d7d4e8bb274d49b61fcd0a17285f23a55c5c8fed",
+                "reference": "d7d4e8bb274d49b61fcd0a17285f23a55c5c8fed",
                 "shasum": ""
             },
             "require": {
@@ -3447,7 +3447,7 @@
                 "issues": "https://github.com/web-scientist/postman/issues",
                 "source": "https://github.com/web-scientist/postman/tree/main"
             },
-            "time": "2022-03-18T07:45:44+00:00"
+            "time": "2022-03-18T09:51:48+00:00"
         }
     ],
     "packages-dev": [],
