@@ -2,6 +2,7 @@
 
 namespace WebScientist\PostmanLaravel;
 
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
 use WebScientist\PostmanLaravel\Console\Commands;
 
@@ -35,7 +36,7 @@ class PostmanLaravelServiceProvider extends ServiceProvider
         }
 
         $this->publishes([
-            __DIR__ . '/../config/postman.php' => config_path('postman.php'),
+            __DIR__ . '/../config/postman.php' => App::configPath('postman.php'),
         ], 'postman');
     }
 }
