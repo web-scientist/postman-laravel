@@ -6,6 +6,7 @@ use Closure;
 use ReflectionMethod;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Route;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
@@ -29,12 +30,23 @@ class CollectionService
         $this->router = App::make(Router::class);
     }
 
+    /**
+     * Instantiate a collection with the name supplied
+     * 
+     * @param string $name The name of the collection
+     * @return CollectionService
+     */
     public function name(string $name): self
     {
         $this->collection = $this->postman->collection($name);
         return $this;
     }
 
+    /**
+     * Return a raw Postman Collection object
+     * 
+     * @return Collection
+     */
     public function toRaw(): Collection
     {
         $this->getRoutes();
@@ -68,7 +80,12 @@ class CollectionService
         return Storage::disk('local')->put($path, $json);
     }
 
-    protected function getRoutes()
+    /**
+     * Sets the routes that are required for Postman collection into the collection property
+     * 
+     * @return void
+     */
+    protected function getRoutes(): void
     {
         $routes = $this->router->getRoutes()->get();
 
@@ -79,7 +96,13 @@ class CollectionService
         }
     }
 
-    protected function filter(array $routes)
+    /**
+     * Returns an array of filtered routes as defined in the configuration
+     * 
+     * @param array $routes An array of all routes
+     * @return array 
+     */
+    protected function filter(array $routes): array
     {
         $filtered = [];
 
@@ -107,7 +130,13 @@ class CollectionService
         return $filtered;
     }
 
-    protected function createRequests($route)
+    /**
+     * Creates a Postman Request from the given route
+     * 
+     * @param \Illuminate\Routing\Route $route
+     * @return void
+     */
+    protected function createRequests(Route $route): void
     {
         $uses = $route->action['uses'];
 
@@ -119,25 +148,22 @@ class CollectionService
         $description = $this->getDescription(...$controllerAction);
 
         $method = $route->methods[0];
-        $as = $route->action['as'] ?? '';
         $name = $this->nameOrPath($route);
         $url = $route->uri;
         $object = $this->collection;
 
-        if ($as != '') {
-            $levels = explode('.', $as);
-            // dd($levels);
-            array_pop($levels);
 
-            foreach ($levels as $level) {
-                $level = $this->transformName($level);
-                if ($object->{$level} === null) {
-                    $object = $object->item($level);
-                    continue;
-                }
-                $object = $object->{$level};
+        $levels = $this->getGroupLevels($route->action);
+
+        foreach ($levels as $level) {
+            $level = $this->transformName($level);
+            if ($object->{$level} === null) {
+                $object = $object->item($level);
+                continue;
             }
+            $object = $object->{$level};
         }
+
 
         $object = $object->request($name, $method)->url($url)->description($description);
 
@@ -149,6 +175,37 @@ class CollectionService
         }
     }
 
+    /**
+     * Get the grouping array for nested requests in Postman
+     * 
+     * @param array $action The route action
+     * @return array
+     */
+    protected function getGroupLevels(array $action): array
+    {
+        $groupBy = Config::get('postman.group_by');
+
+        if ($groupBy == 'name') {
+            $as = $action['as'] ?? '';
+            $levels = explode('.', $as);
+            array_pop($levels);
+            return $levels;
+        }
+
+        if ($groupBy == 'tag') {
+            if (is_string($groupBy)) {
+                return [$groupBy];
+            }
+            return $groupBy;
+        }
+    }
+
+    /**
+     * Get the body for the Request object
+     * 
+     * @param string $class The controller class name
+     * @param string $method The controller method name
+     */
     protected function getBody(string $class, string $method)
     {
         $reflectionMethod = new ReflectionMethod($class, $method);
@@ -173,10 +230,16 @@ class CollectionService
                 $rules = $dependency->rules();
             }
         }
-        return $this->getRules($rules);
+        return $this->getFields($rules);
     }
 
-    protected function getRules(array $rules)
+    /**
+     * Gets the form body fields based upon Request class rules
+     * 
+     * @param array $rules The form request class rules
+     * @return array
+     */
+    protected function getFields(array $rules): array
     {
         $fields = [];
 
@@ -197,14 +260,26 @@ class CollectionService
         return $fields;
     }
 
-
+    /**
+     * Transform the name for Request or Folder name
+     * 
+     * @param string $name
+     * @return string
+     */
     protected function transformName(string $name): string
     {
         $name = Str::replace('.', ' ', $name);
         return Str::title($name);
     }
 
-    protected function getDescription(string $class, string $method)
+    /**
+     * Get the description for a request from the class method's Docblock
+     * 
+     * @param string $class The controller class name
+     * @param string $method The controller method name
+     * @return string
+     */
+    protected function getDescription(string $class, string $method): string
     {
         $reflectionMethod = new ReflectionMethod($class, $method);
         $docComment = $reflectionMethod->getDocComment();
@@ -220,7 +295,13 @@ class CollectionService
         return $lines[0];
     }
 
-    protected function nameOrPath($route)
+    /**
+     * Use the path as name if name is not present in route
+     * 
+     * @param \Illuminate\Routing\Route $route
+     * @return string
+     */
+    protected function nameOrPath(Route $route): string
     {
         $action = $route->action;
         if (array_key_exists('as', $action)) {
