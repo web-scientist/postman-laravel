@@ -7,6 +7,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use WebScientist\PostmanLaravel\Concerns\Api;
+use Symfony\Component\Console\Input\InputOption;
 use WebScientist\PostmanLaravel\Services\CollectionService as Collection;
 use WebScientist\PostmanLaravel\Services\EnvironmentService as Environment;
 
@@ -20,7 +21,8 @@ class PostmanCreateCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'postman:create {--name=}';
+    protected $signature = 'postman:create {name?}
+                            {--e|environment : Create environment object}';
 
     /**
      * The console command description.
@@ -43,25 +45,26 @@ class PostmanCreateCommand extends Command
 
     public function handle(): int
     {
-        $this->name = $this->option('name') ?? Config::get('app.name');
+        $this->name = $this->argument('name') ?? Config::get('app.name');
 
         $collection = App::make(Collection::class)
             ->name($this->name)
             ->toJson(true);
 
         $proceed = $this->callPostman('collections', $collection);
+        $this->info("Collection created on Postman.");
 
         if (!$proceed) {
             return 0;
         }
 
-        $environment = App::make(Environment::class)
-            ->name($this->name)
-            ->toJson(true);
-        $this->callPostman('environments', $environment);
-
-
-        $this->info("Collection and Environment created on Postman.");
+        if ($this->option('environment')) {
+            $environment = App::make(Environment::class)
+                ->name($this->name)
+                ->toJson(true);
+            $this->callPostman('environments', $environment);
+            $this->info("Environment created on Postman.");
+        }
 
         return 0;
     }

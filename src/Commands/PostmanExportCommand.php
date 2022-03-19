@@ -16,7 +16,8 @@ class PostmanExportCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'postman:export {--name=}';
+    protected $signature = 'postman:export {name?}
+                            {--e|environment : Export environment json}';
 
     /**
      * The console command description.
@@ -42,11 +43,13 @@ class PostmanExportCommand extends Command
             ->name($name)
             ->export();
 
-        App::make(Environment::class)
-            ->name($name)
-            ->export();
+        if ($this->option('environment')) {
+            App::make(Environment::class)
+                ->name($name)
+                ->export();
+        }
 
-        $this->info('Files exported successfully');
+        $this->info('File/s exported successfully');
 
         return 0;
     }
