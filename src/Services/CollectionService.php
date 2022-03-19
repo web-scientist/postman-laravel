@@ -100,14 +100,25 @@ class CollectionService
      * Returns an array of filtered routes as defined in the configuration
      * 
      * @param array $routes An array of all routes
-     * @return array 
+     * @return array
      */
     protected function filter(array $routes): array
     {
         $filtered = [];
 
         foreach ($routes as $route) {
-            if (!in_array('api', $route->action['middleware'])) {
+
+            if ($route->action['uses'] instanceof Closure) {
+                continue;
+            }
+
+            $configMiddlewares = Config::get('postman.request.inclusion.middleware');
+            $routeMiddlewares = $route->action['middleware'];
+
+            $intersection = array_intersect($configMiddlewares, $routeMiddlewares);
+
+            if (count($intersection)) {
+                $filtered[] = $route;
                 continue;
             }
             $uris = explode('/', $route->uri);
@@ -116,15 +127,12 @@ class CollectionService
                 continue;
             }
 
-            $excludedUriPrefixes = Config::get('postman.request.excluded_prefixes');
+            $excludedUriPrefixes = Config::get('postman.request.exclusion.prefix');
 
             if (in_array($uris[0], $excludedUriPrefixes)) {
                 continue;
             }
 
-            if ($route->action['uses'] instanceof Closure) {
-                continue;
-            }
             $filtered[] = $route;
         }
         return $filtered;
@@ -183,7 +191,7 @@ class CollectionService
      */
     protected function getGroupLevels(array $action): array
     {
-        $groupBy = Config::get('postman.group_by');
+        $groupBy = Config::get('postman.request.group_by');
 
         if ($groupBy == 'name') {
             $as = $action['as'] ?? '';

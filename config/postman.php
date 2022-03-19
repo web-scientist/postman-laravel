@@ -8,9 +8,19 @@ return [
     ],
 
     'request' => [
-        'excluded_prefixes' => [
-            '_ignition',
-            'sanctum',
+        'group_by' => 'name', // possible options 'name' or 'tag'
+
+        'inclusion' => [
+            'middleware' => [
+                'api'
+            ],
+        ],
+
+        'exclusion' => [
+            'prefix' => [
+                '_ignition',
+                'sanctum',
+            ],
         ],
     ],
 
