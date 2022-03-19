@@ -8,7 +8,7 @@ return [
     ],
 
     'request' => [
-        'group_by' => 'name', // possible options 'name' or 'tag'
+        'group_by' => 'name', // Default set to name, You can overide it with any custom key like 'tag'
 
         'inclusion' => [
             'middleware' => [

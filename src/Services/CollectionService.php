@@ -200,11 +200,9 @@ class CollectionService
             return $levels;
         }
 
-        if ($groupBy == 'tag') {
-            $tag = $action['tag'] ?? '';
-            $levels = explode('.', $tag);
-            return $levels;
-        }
+        $customKey = $action[$groupBy] ?? '';
+        $levels = explode('.', $customKey);
+        return $levels;
     }
 
     /**
