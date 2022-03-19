@@ -193,10 +193,9 @@ class CollectionService
         }
 
         if ($groupBy == 'tag') {
-            if (is_string($groupBy)) {
-                return [$groupBy];
-            }
-            return $groupBy;
+            $tag = $action['tag'] ?? '';
+            $levels = explode('.', $tag);
+            return $levels;
         }
     }
 
