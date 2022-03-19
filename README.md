@@ -5,7 +5,7 @@
 1. Install the package into your laravel application.
 
     ```bash
-    composer require webscientist/postman-laravel
+    composer require webscientist/postman-laravel --dev
     ```
 
 2. Publish the config file by using the following command.
