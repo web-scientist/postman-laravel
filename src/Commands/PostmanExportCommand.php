@@ -38,7 +38,7 @@ class PostmanExportCommand extends Command
 
     public function handle(): int
     {
-        $name = ($this->option('name') ?? Config::get('app.name')) . '_' . time();
+        $name = ($this->argument('name') ?? Config::get('app.name')) . '_' . time();
         App::make(Collection::class)
             ->name($name)
             ->export();
