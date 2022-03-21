@@ -5,7 +5,6 @@ namespace WebScientist\PostmanLaravel\Services;
 use Closure;
 use ReflectionMethod;
 use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\App;
@@ -152,9 +151,6 @@ class CollectionService
 
         $formSubmitMethods = ['POST', 'PUT', 'PATCH'];
 
-
-        $description = $this->getDescription(...$controllerAction);
-
         $method = $route->methods[0];
         $name = $this->nameOrPath($route);
         $url = $route->uri;
@@ -173,14 +169,24 @@ class CollectionService
         }
 
 
-        $object = $object->request($name, $method)->url($url)->description($description);
+        $object = $object->request($name, $method)->url($url);
 
-        $body = [];
         if (in_array($route->methods[0], $formSubmitMethods)) {
-            $body = $this->getBody(...$controllerAction);
+            $bodyMode = Config::get('postman.request.body.default');
 
-            $body = $object->body('formdata', $body);
+            $bodyClass = Config::get('postman.request.body.modes.' . $bodyMode);
+            $body = App::make($bodyClass, [
+                'class' => $controllerAction[0],
+                'method' => $controllerAction[1],
+            ]);
+
+            $object->body($bodyMode, $body->getBody());
+            $object->description($body->getDescription());
+            return;
         }
+
+        $description = $this->getDescription(...$controllerAction);
+        $object->description($description);
     }
 
     /**
@@ -203,66 +209,6 @@ class CollectionService
         $customKey = $action[$groupBy] ?? '';
         $levels = explode('.', $customKey);
         return $levels;
-    }
-
-    /**
-     * Get the body for the Request object
-     * 
-     * @param string $class The controller class name
-     * @param string $method The controller method name
-     */
-    protected function getBody(string $class, string $method)
-    {
-        $reflectionMethod = new ReflectionMethod($class, $method);
-
-        $parameters = $reflectionMethod->getParameters();
-
-        $rules = [];
-        foreach ($parameters as $parameter) {
-            $dependencyClass = (string) $parameter->getType();
-
-            if (empty($dependencyClass)) {
-                continue;
-            }
-
-            $dependency = new $dependencyClass();
-
-            if (!($dependency instanceof Request)) {
-                continue;
-            }
-
-            if (method_exists($dependency, 'rules')) {
-                $rules = $dependency->rules();
-            }
-        }
-        return $this->getFields($rules);
-    }
-
-    /**
-     * Gets the form body fields based upon Request class rules
-     * 
-     * @param array $rules The form request class rules
-     * @return array
-     */
-    protected function getFields(array $rules): array
-    {
-        $fields = [];
-
-        foreach ($rules as $name => $rule) {
-
-            if (is_array($rule)) {
-                $rule = implode(" | ", $rule);
-            }
-
-            $value = '';
-
-            $fields[] = [
-                'key' => $name,
-                'value' => $value,
-                'description' => $rule,
-            ];
-        };
-        return $fields;
     }
 
     /**

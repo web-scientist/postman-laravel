@@ -7,8 +7,19 @@ return [
         'key' => env('POSTMAN_API_KEY', ''),
     ],
 
+    'auth_type' => 'bearer',
+
     'request' => [
         'group_by' => 'name', // Default set to name, You can overide it with any custom key like 'tag'
+
+        'body' => [
+            'default' => 'json',
+
+            'modes' => [
+                'formdata' => \WebScientist\PostmanLaravel\Services\Body\FormData::class,
+                'json' => \WebScientist\PostmanLaravel\Services\Body\Json::class,
+            ],
+        ],
 
         'inclusion' => [
             'middleware' => [

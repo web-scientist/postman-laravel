@@ -2,12 +2,10 @@
 
 namespace WebScientist\PostmanLaravel\Commands;
 
-use Illuminate\Support\Str;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use WebScientist\PostmanLaravel\Concerns\Api;
-use Symfony\Component\Console\Input\InputOption;
 use WebScientist\PostmanLaravel\Services\CollectionService as Collection;
 use WebScientist\PostmanLaravel\Services\EnvironmentService as Environment;
 
