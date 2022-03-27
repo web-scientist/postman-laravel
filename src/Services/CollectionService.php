@@ -11,8 +11,8 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use WebScientist\Postman\Collection\Collection;
-use WebScientist\Postman\Services\PostmanService as Postman;
 use WebScientist\PostmanLaravel\Contracts\Body;
+use WebScientist\Postman\Services\PostmanService as Postman;
 
 class CollectionService
 {
