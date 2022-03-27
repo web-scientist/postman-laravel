@@ -9,17 +9,18 @@ return [
 
     'auth_type' => 'bearer',
 
+    'auth_type_values' => [
+        'bearer' => '{{AUTH_TOKEN}}',
+        'basic' => [
+            '{{USERNAME}}',
+            '{{PASSWORD}}',
+        ],
+    ],
+
     'request' => [
         'group_by' => 'name', // Default set to name, You can overide it with any custom key like 'tag'
 
-        'body' => [
-            'default' => 'json',
-
-            'modes' => [
-                'formdata' => \WebScientist\PostmanLaravel\Services\Body\FormData::class,
-                'json' => \WebScientist\PostmanLaravel\Services\Body\Json::class,
-            ],
-        ],
+        'body_mode' => 'formdata',
 
         'inclusion' => [
             'middleware' => [

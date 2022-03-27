@@ -5,6 +5,7 @@ namespace WebScientist\PostmanLaravel\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
 use WebScientist\PostmanLaravel\Concerns\Api;
 use WebScientist\PostmanLaravel\Services\CollectionService as Collection;
 use WebScientist\PostmanLaravel\Services\EnvironmentService as Environment;
@@ -76,6 +77,7 @@ class PostmanCreateCommand extends Command
         if ($response->failed()) {
             $this->warn($response->json('error.message'));
             $this->warn('Check you POSTMAN_API_KEY in .env file');
+            Log::error($response->json());
             return 0;
         }
 

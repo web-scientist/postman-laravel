@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use WebScientist\Postman\Collection\Collection;
 use WebScientist\Postman\Services\PostmanService as Postman;
+use WebScientist\PostmanLaravel\Contracts\Body;
 
 class CollectionService
 {
@@ -38,6 +39,15 @@ class CollectionService
     public function name(string $name): self
     {
         $this->collection = $this->postman->collection($name);
+        $this->setCollectionAuth();
+        return $this;
+    }
+
+    public function setCollectionAuth()
+    {
+        $authType = Config::get('postman.auth_type');
+        $values = Config::get('postman.auth_type_values.' . $authType);
+        $this->collection->auth($authType, $values);
         return $this;
     }
 
@@ -172,10 +182,9 @@ class CollectionService
         $object = $object->request($name, $method)->url($url);
 
         if (in_array($route->methods[0], $formSubmitMethods)) {
-            $bodyMode = Config::get('postman.request.body.default');
+            $bodyMode = Config::get('postman.request.body_mode');
 
-            $bodyClass = Config::get('postman.request.body.modes.' . $bodyMode);
-            $body = App::make($bodyClass, [
+            $body = App::makeWith(Body::class, [
                 'class' => $controllerAction[0],
                 'method' => $controllerAction[1],
             ]);
