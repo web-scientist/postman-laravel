@@ -62,12 +62,6 @@ class CollectionService
         return $this->collection;
     }
 
-    public function json(): string
-    {
-        $this->getRoutes();
-        return json_encode($this->collection, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
-    }
-
     public function toJson(bool $keyWrapper = false, int $flags = JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT): string
     {
         $this->getRoutes();
@@ -78,7 +72,7 @@ class CollectionService
 
     public function export(bool $suffixDateTime = false): bool
     {
-        $json = $this->json();
+        $json = $this->toJson();
         $name = $this->collection->info['name'];
 
         $suffix = $suffixDateTime ? date_format(date_create(), '_YmdHis') : '';
