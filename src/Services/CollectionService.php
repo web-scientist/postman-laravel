@@ -175,6 +175,11 @@ class CollectionService
 
         $object = $object->request($name, $method)->url($url);
 
+        $authMiddleware = Config::get('postman.auth_middleware');
+        if (in_array($authMiddleware, $route->action['middleware'])) {
+            $object->noauth();
+        }
+
         if (in_array($route->methods[0], $formSubmitMethods)) {
             $bodyMode = Config::get('postman.request.body_mode');
 

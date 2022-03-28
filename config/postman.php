@@ -9,6 +9,8 @@ return [
 
     'auth_type' => 'bearer',
 
+    'auth_middleware' => 'api:auth',
+
     'auth_type_values' => [
         'bearer' => '{{AUTH_TOKEN}}',
         'basic' => [
